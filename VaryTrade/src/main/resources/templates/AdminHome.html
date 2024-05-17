@@ -1,0 +1,316 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://thymeleaf.org">
+
+<head>
+	<title>Home</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+</head>
+
+<style>
+	a:link {
+ 		color: black;
+	}
+	
+	a:visited {
+ 		color: black;
+	}
+	a:hover {
+  		color: black;
+	}
+	a:active {
+ 	 	color: black;
+	}
+	body {
+		background-color: #D3D3D3;
+	}
+	
+	.nav-item {
+		font-size: 20px;
+	}
+	
+	.header-container {
+		display: flex;
+  		justify-content: space-between;
+  		align-items: flex-end;
+	}
+	caption {
+		caption-side: top;
+		display: table-caption;
+  		text-align: center;
+	}
+	
+	.table-content {
+		display: flex;
+	}
+	
+	.outer-table {
+  		border-collapse: collapse;
+	}
+	
+	.outer-table-td {
+ 		 border-bottom: 1pt solid white;
+	}
+</style>
+
+<body>
+	<header class="p-3 text-bg-dark">	
+		<div class="container header-container">
+			<h1 th:text="${company.name}"></h1>
+			<ul class="nav nav-pills">
+        		<li class="nav-item"><a href="/account" class="nav-link text-white">Account</a></li>
+        		<li class="nav-item"><a href="/admin/register" class="nav-link text-white">Register New Admin</a></li>
+       			<li class="nav-item"><a th:href="@{/logout}" class="nav-link text-white">Logout</a></li>
+     		</ul>  
+		</div>
+	</header>
+	<div class="container body-container">
+		<div class="py-5 text-center">			
+			<div class="table-content">	
+					<table class="table table-dark outer-table">
+					<caption class="h4 text-dark" th:text="'All pending ' + ${collectibleTypeName[0]} + ' trades.'"</caption>
+					<thead>
+						<tr>
+							<th scope="col">Id</th>
+							<th scope="col">Date Posted</th>
+							<th scope="col">Date Accepted</th>
+      						<th scope="col">Items traded by poster:</th>
+      						<th scope="col">Items traded by accepter:</th>
+      						<th scope="col">View Details Link</th>
+      					</tr>
+					</thead>
+					<tbody>
+ 						<tr th:each="tradeDeal : ${pendingTradeDealsOne}">
+ 							<td scope="col" th:text="${tradeDeal.id}"></td>
+ 							<td scope="col" th:text="${tradeDeal.postDate}"></td>
+ 							<td scope="col" th:text="${tradeDeal.acceptDate}"></td>
+ 							<td scope="col">
+ 								<table class="table table-dark">
+  									<tbody>
+										<tr th:each="tradeItem : ${posterTradeItemsOne[tradeDealStat.index]}"> 
+											<td class="outer-table-td" scope="col" th:text="${tradeItem.name}"></td>
+											<td class="outer-table-td" scope="col" th:text="${tradeItem.condition}"></td>
+											<td class="outer-table-td" scope="col" th:if="${!userTradeItemAttrsOneOne.isEmpty()}" th:text="${tradeItem.userTradeItemAttrOne}"></td>
+											<td class="outer-table-td" scope="col" th:if="${!userTradeItemAttrsTwoOne.isEmpty()}" th:text="${tradeItem.userTradeItemAttrTwo}"></td>
+											<td class="outer-table-td" scope="col" th:if="${!userTradeItemAttrsThreeOne.isEmpty()}" th:text="${tradeItem.userTradeItemAttrThree}"></td>
+										</tr>
+  									</tbody>
+								</table>	
+ 							</td>
+ 							<td scope="col">
+ 					 			<table class="table table-dark">
+  									<tbody>
+										<tr th:each="tradeItem : ${accepterTradeItemsOne[tradeDealStat.index]}"> 
+											<td class="outer-table-td" scope="col" th:text="${tradeItem.name}"></td>
+											<td class="outer-table-td" scope="col" th:text="${tradeItem.condition}"></td>
+											<td class="outer-table-td" scope="col" th:if="${!userTradeItemAttrsOneOne.isEmpty()}" th:text="${tradeItem.userTradeItemAttrOne}"></td>
+											<td class="outer-table-td" scope="col" th:if="${!userTradeItemAttrsTwoOne.isEmpty()}" th:text="${tradeItem.userTradeItemAttrTwo}"></td>
+											<td class="outer-table-td" scope="col" th:if="${!userTradeItemAttrsThreeOne.isEmpty()}" th:text="${tradeItem.userTradeItemAttrThree}"></td>
+										</tr>
+  									</tbody>
+								</table>
+ 							</td>
+ 							<td scope="col"><a class="text-white" th:href="@{'/admin/trade-deal/pending/details?id=' + ${tradeDeal.id}}">Details</a>
+ 						</tr>	
+					</tbody>
+				</table>
+			</div>
+			<div class="table-content">	
+				<table class="table table-dark">
+				<caption class="h4 text-dark" th:text="'All pending ' + ${collectibleTypeName[0]} + ' resales.'"</caption>
+					<thead>
+						<tr>
+							<th scope="col">Id</th>
+							<th scope="col">Date Posted</th>
+							<th scope="col">Date Accepted</th>
+							<th scope="col">Item being sold</th>
+      						<th scope="col">Price</th>
+      						<th scope="col">Condition</th>
+							<th scope="col" th:if="${!userTradeItemAttrsOneOne.isEmpty()}" th:text="${userTradeItemAttrOne[0]}"></th>
+      						<th scope="col" th:if="${!userTradeItemAttrsTwoOne.isEmpty()}" th:text="${userTradeItemAttrOne[1]}"></th>
+   							<th scope="col" th:if="${!userTradeItemAttrsThreeOne.isEmpty()}" th:text="${userTradeItemAttrOne[2]}"></th>
+      						<th scope="col">View Details Link</th>
+      					</tr>
+					</thead>
+					<tbody>
+						<tr th:each="resaleDeal : ${pendingResaleDealOne}">
+							<td scope="col" th:text="${resaleDeal.id}"></td>
+							<td scope="col" th:text="${resaleDeal.postDate}"></td>
+							<td scope="col" th:text="${resaleDeal.acceptDate}"></td>
+							<td scope="col" th:text="${resaleDeal.name}"></td>
+							<td scope="col" th:text="${resaleDeal.price}"></td>
+							<td scope="col" th:text="${resaleDeal.condition}"></td>
+							<td scope="col" th:if="${!userTradeItemAttrsOneOne.isEmpty()}" th:text="${resaleDeal.userResaleItemAttrOne}"></td>
+							<td scope="col" th:if="${!userTradeItemAttrsTwoOne.isEmpty()}" th:text="${resaleDeal.userResaleItemAttrTwo}"></td>
+							<td scope="col" th:if="${!userTradeItemAttrsThreeOne.isEmpty()}" th:text="${resaleDeal.userResaleItemAttrThree}"></td>
+							<td scope="col"><a class="text-white" th:href="@{'/admin/resale-deal/pending/details?id=' + ${resaleDeal.id}}">Details</a>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="table-content" th:if="${#lists.size(collectibleTypeName) > 1}">	
+					<table class="table table-dark outer-table">
+					<caption class="h4 text-dark" th:text="'All pending ' + ${collectibleTypeName[1]} + ' trades.'"</caption>
+					<thead>
+						<tr>
+							<th scope="col">Id</th>
+							<th scope="col">Date Posted</th>
+							<th scope="col">Date Accepted</th>
+      						<th scope="col">Items traded by poster:</th>
+      						<th scope="col">Items traded by accepter:</th>
+      						<th scope="col">View Details Link</th>
+      					</tr>
+					</thead>
+					<tbody>
+ 						<tr th:each="tradeDeal : ${pendingTradeDealsTwo}">
+ 							<td scope="col" th:text="${tradeDeal.id}"></td>
+ 							<td scope="col" th:text="${tradeDeal.postDate}"></td>
+ 							<td scope="col" th:text="${tradeDeal.acceptDate}"></td>
+ 							<td scope="col">
+ 								<table class="table table-dark">
+  									<tbody>
+										<tr th:each="tradeItem : ${posterTradeItemsTwo[tradeDealStat.index]}"> 
+											<td class="outer-table-td" scope="col" th:text="${tradeItem.name}"></td>
+											<td class="outer-table-td" scope="col" th:text="${tradeItem.condition}"></td>
+											<td class="outer-table-td" scope="col" th:if="${!userTradeItemAttrsOneTwo.isEmpty()}" th:text="${tradeItem.userTradeItemAttrOne}"></td>
+											<td class="outer-table-td" scope="col" th:if="${!userTradeItemAttrsTwoTwo.isEmpty()}" th:text="${tradeItem.userTradeItemAttrTwo}"></td>
+											<td class="outer-table-td" scope="col" th:if="${!userTradeItemAttrsThreeTwo.isEmpty()}" th:text="${tradeItem.userTradeItemAttrThree}"></td>
+										</tr>
+  									</tbody>
+								</table>	
+ 							</td>
+ 							<td scope="col">
+ 					 			<table class="table table-dark">
+  									<tbody>
+										<tr th:each="tradeItem : ${accepterTradeItemsTwo[tradeDealStat.index]}"> 
+											<td class="outer-table-td" scope="col" th:text="${tradeItem.name}"></td>
+											<td class="outer-table-td" scope="col" th:text="${tradeItem.condition}"></td>
+											<td class="outer-table-td" scope="col" th:if="${!userTradeItemAttrsOneTwo.isEmpty()}" th:text="${tradeItem.userTradeItemAttrOne}"></td>
+											<td class="outer-table-td" scope="col" th:if="${!userTradeItemAttrsTwoTwo.isEmpty()}" th:text="${tradeItem.userTradeItemAttrTwo}"></td>
+											<td class="outer-table-td" scope="col" th:if="${!userTradeItemAttrsThreeTwo.isEmpty()}" th:text="${tradeItem.userTradeItemAttrThree}"></td>
+										</tr>
+  									</tbody>
+								</table>
+ 							</td>
+ 							<td scope="col"><a class="text-white" th:href="@{'/admin/trade-deal/pending/details?id=' + ${tradeDeal.id}}">Details</a>
+ 						</tr>	
+					</tbody>
+				</table>
+			</div>
+			<div class="table-content" th:if="${#lists.size(collectibleTypeName) > 1}">	
+				<table class="table table-dark">
+				<caption class="h4 text-dark" th:text="'All pending ' + ${collectibleTypeName[1]} + ' resales.'"</caption>
+					<thead>
+						<tr>
+							<th scope="col">Id</th>
+							<th scope="col">Date Posted</th>
+							<th scope="col">Date Accepted</th>
+							<th scope="col">Item being sold</th>
+      						<th scope="col">Price</th>
+      						<th scope="col">Condition</th>
+							<th scope="col" th:if="${!userTradeItemAttrsOneTwo.isEmpty()}" th:text="${userTradeItemAttrTwo[0]}"></th>
+      						<th scope="col" th:if="${!userTradeItemAttrsTwoTwo.isEmpty()}" th:text="${userTradeItemAttrTwo[1]}"></th>
+   							<th scope="col" th:if="${!userTradeItemAttrsThreeTwo.isEmpty()}" th:text="${userTradeItemAttrTwo[2]}"></th>
+      						<th scope="col">View Details Link</th>
+      					</tr>
+					</thead>
+					<tbody>
+						<tr th:each="resaleDeal : ${pendingResaleDealTwo}">
+							<td scope="col" th:text="${resaleDeal.id}"></td>
+							<td scope="col" th:text="${resaleDeal.postDate}"></td>
+							<td scope="col" th:text="${resaleDeal.postDate}"></td>
+							<td scope="col" th:text="${resaleDeal.name}"></td>
+							<td scope="col" th:text="${resaleDeal.price}"></td>
+							<td scope="col" th:text="${resaleDeal.condition}"></td>
+							<td scope="col" th:if="${!userTradeItemAttrsOneTwo.isEmpty()}" th:text="${resaleDeal.userResaleItemAttrOne}"></td>
+							<td scope="col" th:if="${!userTradeItemAttrsTwoTwo.isEmpty()}" th:text="${resaleDeal.userResaleItemAttrTwo}"></td>
+							<td scope="col" th:if="${!userTradeItemAttrsThreeTwo.isEmpty()}" th:text="${resaleDeal.userResaleItemAttrThree}"></td>
+							<td scope="col"><a class="text-white" th:href="@{'/admin/resale-deal/pending/details?id=' + ${resaleDeal.id}}">Details</a>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+						<div class="table-content" th:if="${#lists.size(collectibleTypeName) > 2}">	
+					<table class="table table-dark outer-table">
+					<caption class="h4 text-dark" th:text="'All pending ' + ${collectibleTypeName[2]} + ' trades.'"</caption>
+					<thead>
+						<tr>
+							<th scope="col">Id</th>
+							<th scope="col">Date Posted</th>
+							<th scope="col">Date Accepted</th>
+      						<th scope="col">Items traded by poster:</th>
+      						<th scope="col">Items traded by accepter:</th>
+      						<th scope="col">View Details Link</th>
+      					</tr>
+					</thead>
+					<tbody>
+ 						<tr th:each="tradeDeal : ${pendingTradeDealsTwo}">
+ 							<td scope="col" th:text="${tradeDeal.id}"></td>
+ 							<td scope="col" th:text="${tradeDeal.postDate}"></td>
+ 							<td scope="col" th:text="${tradeDeal.acceptDate}"></td>
+ 							<td scope="col">
+ 								<table class="table table-dark">
+  									<tbody>
+										<tr th:each="tradeItem : ${posterTradeItemsThree[tradeDealStat.index]}"> 
+											<td class="outer-table-td" scope="col" th:text="${tradeItem.name}"></td>
+											<td class="outer-table-td" scope="col" th:text="${tradeItem.condition}"></td>
+											<td class="outer-table-td" scope="col" th:if="${!userTradeItemAttrsOneThree.isEmpty()}" th:text="${tradeItem.userTradeItemAttrOne}"></td>
+											<td class="outer-table-td" scope="col" th:if="${!userTradeItemAttrsTwoThree.isEmpty()}" th:text="${tradeItem.userTradeItemAttrTwo}"></td>
+											<td class="outer-table-td" scope="col" th:if="${!userTradeItemAttrsThreeThree.isEmpty()}" th:text="${tradeItem.userTradeItemAttrThree}"></td>
+										</tr>
+  									</tbody>
+								</table>	
+ 							</td>
+ 							<td scope="col">
+ 					 			<table class="table table-dark">
+  									<tbody>
+										<tr th:each="tradeItem : ${accepterTradeItemsThree[tradeDealStat.index]}"> 
+											<td class="outer-table-td" scope="col" th:text="${tradeItem.name}"></td>
+											<td class="outer-table-td" scope="col" th:text="${tradeItem.condition}"></td>
+											<td class="outer-table-td" scope="col" th:if="${!userTradeItemAttrsOneThree.isEmpty()}" th:text="${tradeItem.userTradeItemAttrOne}"></td>
+											<td class="outer-table-td" scope="col" th:if="${!userTradeItemAttrsTwoThree.isEmpty()}" th:text="${tradeItem.userTradeItemAttrTwo}"></td>
+											<td class="outer-table-td" scope="col" th:if="${!userTradeItemAttrsThreeThree.isEmpty()}" th:text="${tradeItem.userTradeItemAttrThree}"></td>
+										</tr>
+  									</tbody>
+								</table>
+ 							</td>
+ 							<td scope="col"><a class="text-white" th:href="@{'/admin/trade-deal/pending/details?id=' + ${tradeDeal.id}}">Details</a>
+ 						</tr>	
+					</tbody>
+				</table>
+			</div>
+			<div class="table-content" th:if="${#lists.size(collectibleTypeName) > 2}">	
+				<table class="table table-dark">
+				<caption class="h4 text-dark" th:text="'All pending ' + ${collectibleTypeName[2]} + ' resales.'"</caption>
+					<thead>
+						<tr>
+							<th scope="col">Id</th>
+							<th scope="col">Date Posted</th>
+							<th scope="col">Item being sold</th>
+      						<th scope="col">Price</th>
+      						<th scope="col">Condition</th>
+							<th scope="col" th:if="${!userTradeItemAttrsOneThree.isEmpty()}" th:text="${userTradeItemAttrThree[0]}"></th>
+      						<th scope="col" th:if="${!userTradeItemAttrsTwoThree.isEmpty()}" th:text="${userTradeItemAttrThree[1]}"></th>
+   							<th scope="col" th:if="${!userTradeItemAttrsThreeThree.isEmpty()}" th:text="${userTradeItemAttrThree[2]}"></th>
+      						<th scope="col">View Details Link</th>
+      					</tr>
+					</thead>
+					<tbody>
+						<tr th:each="resaleDeal : ${pendingResaleDealThree}">
+							<td scope="col" th:text="${resaleDeal.id}"></td>
+							<td scope="col" th:text="${resaleDeal.postDate}"></td>
+							<td scope="col" th:text="${resaleDeal.name}"></td>
+							<td scope="col" th:text="${resaleDeal.price}"></td>
+							<td scope="col" th:text="${resaleDeal.condition}"></td>
+							<td scope="col" th:if="${!userTradeItemAttrsOneThree.isEmpty()}" th:text="${resaleDeal.userResaleItemAttrOne}"></td>
+							<td scope="col" th:if="${!userTradeItemAttrsTwoThree.isEmpty()}" th:text="${resaleDeal.userResaleItemAttrTwo}"></td>
+							<td scope="col" th:if="${!userTradeItemAttrsThreeThree.isEmpty()}" th:text="${resaleDeal.userResaleItemAttrThree}"></td>
+							<td scope="col"><a class="text-white" th:href="@{'/admin/resale-deal/pending/details?id=' + ${resaleDeal.id}}">Details</a>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

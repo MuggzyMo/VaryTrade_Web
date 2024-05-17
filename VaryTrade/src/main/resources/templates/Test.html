@@ -1,0 +1,257 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://thymeleaf.org">
+
+<head>
+	<title>Profile</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+</head>
+
+<style>
+	body {
+		background-color: #D3D3D3;
+	}
+	
+	.nav-item {
+		font-size: 20px;
+	}
+	
+	.header-container {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-end;
+	}
+	
+	.content {
+		display:grid;
+		grid-template-columns: max-content max-content;
+		grid-gap:5px;
+		justify-content: center;
+		align-items: center;
+	}
+	
+	.info {
+		margin-top: 3%;
+	}
+	
+	.content-label {
+		text-align:right;
+	}
+	
+	.content-text {
+		font-size: 25px;
+	}
+	
+	.white {
+		color:#ffffff;
+	}
+	
+	.black-background {
+		background-color:#000000;
+	}
+	
+	button {
+		margin-top: 5%;
+	}
+		
+	.table-content {
+		display: flex;
+	}
+	
+	.outer-table {
+  		border-collapse: collapse;
+	}
+	
+	.outer-table-td {
+ 		 border-bottom: 1pt solid white;
+	}
+	
+	.left-table {
+		margin-right: 5%;
+	}
+	
+	.right-table {
+		margin-left: 5%;
+	}
+		
+	caption {
+		caption-side: top;
+		display: table-caption;
+  		text-align: center;
+	}
+</style>
+
+<body>
+	<header class="p-3 text-bg-dark">	
+		<div class="container header-container">
+			<h1 th:text="${company.name}"></h1>
+			<ul class="nav nav-pills">
+        		<li class="nav-item"><a href="/account" class="nav-link text-white" aria-current="page">Account</a></li>
+       			<li class="nav-item"><a href="/your-trade-deals" class="nav-link text-white">Your Trade Deals</a></li>
+       			<li class="nav-item"><a href="/your-resale-deals" class="nav-link text-white">Your Resale Deals</a></li>
+       			<li class="nav-item"><a href="/profile/search" class="nav-link text-white">Search For Collector</a></li>
+       			<li class="nav-item"><a href="/followers" class="nav-link text-white">Followers</a></li>
+       			<li class="nav-item"><a href="/following" class="nav-link text-white">Following</a></li>
+       			<li class="nav-item"><a href="/contact" class="nav-link text-white">Contact Us</a></li>
+       			<li class="nav-item"><a th:href="@{/logout}" class="nav-link text-white">Logout</a></li>
+     		</ul>
+		</div>
+	</header>
+	<div class="content info">
+		<label class="h3 content-label" for="username">Username:</label>
+		<span class="content-text" id="username" th:text="${user.userName}"></span>
+	</div>
+		<div class="container body-container">
+		<div class="py-5 text-center">	
+			<div class="table-content">	
+					<table class="table table-dark outer-table">
+					<caption class="h4 text-dark" th:text="'Collector\'s open ' + ${collectibleTypeName[0]} + ' trades.'"</caption>
+					<thead>
+						<tr>
+							<th scope="col">Id</th>
+							<th scope="col">Date Posted</th>
+      						<th scope="col">Items he/she wishes to trade:</th>
+      						<th scope="col">Items he/she wishes to receive:</th>
+      						<th scope="col">View Details Link</th>
+      					</tr>
+					</thead>
+					<tbody>
+ 						<tr th:each="tradeDeal : ${openTradeDealsOne}">
+ 							<td scope="col" th:text="${tradeDeal.id}"></td>
+ 							<td scope="col" th:text="${tradeDeal.postDate}"></td>
+ 							<td scope="col">
+ 								<table class="table table-dark">
+  									<tbody>
+										<tr th:each="tradeItem : ${openPosterTradeItemsOne[tradeDealStat.index]}"> 
+											<td class="outer-table-td" scope="col" th:text="${tradeItem.name}"></td>
+											<td class="outer-table-td" scope="col" th:text="${tradeItem.condition}"></td>
+											<td class="outer-table-td" scope="col" th:if="${!userTradeItemAttrsOneOne.isEmpty()}" th:text="${tradeItem.userTradeItemAttrOne}"></td>
+											<td class="outer-table-td" scope="col" th:if="${!userTradeItemAttrsTwoOne.isEmpty()}" th:text="${tradeItem.userTradeItemAttrTwo}"></td>
+											<td class="outer-table-td" scope="col" th:if="${!userTradeItemAttrsThreeOne.isEmpty()}" th:text="${tradeItem.userTradeItemAttrThree}"></td>
+										</tr>
+  									</tbody>
+								</table>	
+ 							</td>
+ 							<td scope="col">
+ 					 			<table class="table table-dark">
+  									<tbody>
+										<tr th:each="tradeItem : ${openAccepterTradeItemsOne[tradeDealStat.index]}"> 
+											<td class="outer-table-td" scope="col" th:text="${tradeItem.name}"></td>
+											<td class="outer-table-td" scope="col" th:text="${tradeItem.condition}"></td>
+											<td class="outer-table-td" scope="col" th:if="${!userTradeItemAttrsOneOne.isEmpty()}" th:text="${tradeItem.userTradeItemAttrOne}"></td>
+											<td class="outer-table-td" scope="col" th:if="${!userTradeItemAttrsTwoOne.isEmpty()}" th:text="${tradeItem.userTradeItemAttrTwo}"></td>
+											<td class="outer-table-td" scope="col" th:if="${!userTradeItemAttrsThreeOne.isEmpty()}" th:text="${tradeItem.userTradeItemAttrThree}"></td>
+										</tr>
+  									</tbody>
+								</table>
+ 							</td>
+ 							<td scope="col"><a class="text-white" th:href="@{'/trade-deals/open/details?id=' + ${tradeDeal.id}}">Details</a>
+ 						</tr>	
+					</tbody>
+					</table>
+				</div>
+				<div class="table-content" th:if="${#lists.size(collectibleTypeName) > 1}">	
+					<table class="table table-dark outer-table">
+					<caption class="h4 text-dark" th:text="'Collector\'s open ' + ${collectibleTypeName[1]} + ' trades.'"></caption>
+					<thead>
+						<tr>
+							<th scope="col">Id</th>
+							<th scope="col">Date Posted</th>
+      						<th scope="col">Items he/she wishes to trade:</th>
+      						<th scope="col">Items he/she wishes to receive:</th>
+      						<th scope="col">View Details Link</th>
+      					</tr>
+					</thead>
+					<tbody>
+ 						<tr th:each="tradeDeal : ${openTradeDealsTwo}">
+ 							<td scope="col" th:text="${tradeDeal.id}"></td>
+ 							<td scope="col" th:text="${tradeDeal.postDate}"></td>
+ 							<td scope="col">
+ 								<table class="table table-dark">
+  									<tbody>
+										<tr th:each="tradeItem : ${openPosterTradeItemsTwo[tradeDealStat.index]}"> 
+											<td class="outer-table-td" scope="col" th:text="${tradeItem.name}"></td>
+											<td class="outer-table-td" scope="col" th:text="${tradeItem.condition}"></td>
+											<td class="outer-table-td" scope="col" th:if="${!userTradeItemAttrsOneTwo.isEmpty()}" th:text="${tradeItem.userTradeItemAttrOne}"></td>
+											<td class="outer-table-td" scope="col" th:if="${!userTradeItemAttrsTwoTwo.isEmpty()}" th:text="${tradeItem.userTradeItemAttrTwo}"></td>
+											<td class="outer-table-td" scope="col" th:if="${!userTradeItemAttrsThreeTwo.isEmpty()}" th:text="${tradeItem.userTradeItemAttrThree}"></td>
+										</tr>
+  									</tbody>
+								</table>	
+ 							</td>
+ 							<td scope="col">
+ 					 			<table class="table table-dark">
+  									<tbody>
+										<tr th:each="tradeItem : ${openAccepterTradeItemsTwo[tradeDealStat.index]}"> 
+											<td class="outer-table-td" scope="col" th:text="${tradeItem.name}"></td>
+											<td class="outer-table-td" scope="col" th:text="${tradeItem.condition}"></td>
+											<td class="outer-table-td" scope="col" th:if="${!userTradeItemAttrsOneTwo.isEmpty()}" th:text="${tradeItem.userTradeItemAttrOne}"></td>
+											<td class="outer-table-td" scope="col" th:if="${!userTradeItemAttrsTwoTwo.isEmpty()}" th:text="${tradeItem.userTradeItemAttrTwo}"></td>
+											<td class="outer-table-td" scope="col" th:if="${!userTradeItemAttrsThreeTwo.isEmpty()}" th:text="${tradeItem.userTradeItemAttrThree}"></td>
+										</tr>
+  									</tbody>
+								</table>
+ 							</td>
+ 							<td scope="col"><a class="text-white" th:href="@{'/trade-deals/open/details?id=' + ${tradeDeal.id}}">Details</a>
+ 						</tr>	
+					</tbody>
+					</table>
+				</div>
+				<div class="table-content" th:if="${#lists.size(collectibleTypeName) > 2}">	
+					<table class="table table-dark outer-table">
+					<caption class="h4 text-dark" th:text="'Collector\'s open ' + ${collectibleTypeName[2]} + ' trades. Click to see them all.'"></caption>
+					<thead>
+						<tr>
+							<th scope="col">Id</th>
+							<th scope="col">Date Posted</th>
+      						<th scope="col">Items he/she wishes to trade:</th>
+      						<th scope="col">Items he/she wishes to receive:</th>
+      						<th scope="col">View Details Link</th>
+      					</tr>
+					</thead>
+					<tbody>
+ 						<tr th:each="tradeDeal : ${openTradeDealsThree}">
+ 							<td scope="col" th:text="${tradeDeal.id}"></td>
+ 							<td scope="col" th:text="${tradeDeal.postDate}"></td>
+ 							<td scope="col">
+ 								<table class="table table-dark">
+  									<tbody>
+										<tr th:each="tradeItem : ${openPosterTradeItemsThree[tradeDealStat.index]}"> 
+											<td class="outer-table-td" scope="col" th:text="${tradeItem.name}"></td>
+											<td class="outer-table-td" scope="col" th:text="${tradeItem.condition}"></td>
+											<td class="outer-table-td" scope="col" th:if="${!userTradeItemAttrsOneThree.isEmpty()}" th:text="${tradeItem.userTradeItemAttrOne}"></td>
+											<td class="outer-table-td" scope="col" th:if="${!userTradeItemAttrsTwoThree.isEmpty()}" th:text="${tradeItem.userTradeItemAttrTwo}"></td>
+											<td class="outer-table-td" scope="col" th:if="${!userTradeItemAttrsThreeThree.isEmpty()}" th:text="${tradeItem.userTradeItemAttrThree}"></td>
+										</tr>
+  									</tbody>
+								</table>	
+ 							</td>
+ 							<td scope="col">
+ 					 			<table class="table table-dark">
+  									<tbody>
+										<tr th:each="tradeItem : ${openAccepterTradeItemsThree[tradeDealStat.index]}"> 
+											<td class="outer-table-td" scope="col" th:text="${tradeItem.name}"></td>
+											<td class="outer-table-td" scope="col" th:text="${tradeItem.condition}"></td>
+											<td class="outer-table-td" scope="col" th:if="${!userTradeItemAttrsOneThree.isEmpty()}" th:text="${tradeItem.userTradeItemAttrOne}"></td>
+											<td class="outer-table-td" scope="col" th:if="${!userTradeItemAttrsTwoThree.isEmpty()}" th:text="${tradeItem.userTradeItemAttrTwo}"></td>
+											<td class="outer-table-td" scope="col" th:if="${!userTradeItemAttrsThreeThree.isEmpty()}" th:text="${tradeItem.userTradeItemAttrThree}"></td>
+										</tr>
+  									</tbody>
+								</table>
+ 							</td>
+ 							<td scope="col"><a class="text-white" th:href="@{'/trade-deals/open/details?id=' + ${tradeDeal.id}}">Details</a>
+ 						</tr>	
+					</tbody>
+					</table>
+				</div>
+			</div>	
+			<form th:if="!${followStatus}" class="content" th:action="@{/profile/follow(username=${user.userName})}" method="post">
+				<button class="btn btn-lg btn-primary black-background white" type="submit">Follow</button>
+			</form>
+			<form th:if="${followStatus}" class="content" th:action="@{/profile/unfollow(username=${user.userName})}" method="post">
+				<button class="btn btn-lg btn-primary black-background white" type="submit">Unfollow</button>
+			</form>
+		</div>
+	</div>
+
+</body>
+</html>

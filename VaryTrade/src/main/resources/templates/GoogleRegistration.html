@@ -1,0 +1,116 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://thymeleaf.org">
+
+<head>
+	<title th:text="${company.name} + 'Account Registration'"></title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+</head>
+
+<style>
+	label {
+		display: flex;
+	}
+	
+	button {
+		margin-top: 5%;
+	}
+	
+	.black-background {
+		background-color:#000000;
+	}
+	
+	.white {
+		color:#ffffff;
+	}
+	
+	body {
+		background-color: #D3D3D3;
+	}
+	
+	.captcha {
+		margin-top: 5%;
+	}
+	
+	.required {
+  		color: red;
+	}
+</style>
+
+<body>
+	<div class="container">
+		<div class="py-5 text-center">
+			<p class="lead">Please provide the below information to fully activate your account.</p>
+				<form  th:action="@{/google/register}" th:object="${webGoogleRegistration}" method="post">
+				<p class="alert alert-danger" th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}">
+						Username Error
+				</p>
+				<p class="alert alert-danger" th:if="${#fields.hasErrors('phoneNum')}" th:errors="*{phoneNum}">
+						Phone Number Error
+				</p>
+				<p class="alert alert-danger" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">
+						First Name Error
+				</p>
+				<p class="alert alert-danger" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">
+						Last Name Error
+				</p>
+				<p class="alert alert-danger" th:if="${#fields.hasErrors('address')}" th:errors="*{address}">
+						Address Error
+				</p>
+				<p class="alert alert-danger" th:if="${#fields.hasErrors('city')}" th:errors="*{city}">
+						City Error
+				</p>
+				<p class="alert alert-danger" th:if="${#fields.hasErrors('zipCode')}" th:errors="*{zipCode}">
+						Zip Code Error
+				</p>
+				<p class="alert alert-danger" th:if="${#fields.hasErrors('state')}" th:errors="*{state}">
+						State Error
+				</p>
+				<div class="form-group">
+					<label class="form-label" for="username">Username:<span class="required">*</span></label>
+					<input class="form-control" type="text" name="username" th:field="*{userName}" minlength="5" maxlength="100" required/>
+				</div>
+				<div class="form-group">
+					<label class="form-label" for="phoneNum">Phone Number (###-###-####):<span class="required">*</span></label>
+					<input class="form-control" type="tel" name="phoneNum" th:field="*{phoneNum}" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required/>
+				</div>
+				<div class="row form-horizontal">
+					<div class="form-group col">
+						<label class="form-label" for="firstName">First Name:<span class="required">*</span></label>
+						<input class="form-control" type="text" name="firstName" th:field="*{firstName}" required/>
+					</div>
+					<div class="form-group col">
+						<label class="form-label" for="middleName">Middle Name:</label>
+						<input class="form-control" type="text" name=middleName th:field="*{middleName}"/>
+					</div>
+					<div class="form-group col">
+						<label class="form-label" for="lastName">Last Name:<span class="required">*</span></label>
+						<input class="form-control" type="text" name="lastName" th:field="*{lastName}" required/>
+					</div>
+				</div>
+				<div class="row form-horizontal">
+					<div class="form-group col-md-4">
+						<label for="address">Address:<span class="required">*</span></label>
+						<input class="form-control" type="text" name="address" th:field="*{address}" required/>
+					</div>
+    				<div class="form-group col-md-4">
+      					<label for="city">City:<span class="required">*</span></label>
+      					<input type="text" class="form-control" name="city" th:field="*{city}" required>
+    				</div>
+    				<div class="form-group col-md-2">
+      					<label for="zipCode">Zip Code:<span class="required">*</span></label>
+      					<input type="text" class="form-control" name="zipCode" pattern="[0-9]{5}"  th:field="*{zipCode}" required/>
+    				</div>    				
+    				<div class="form-group col-md-2">
+      					<label for="state">State:<span class="required">*</span></label>
+      					<select name="state" class="form-control">
+      						<option th:each="aState : ${states}" th:value="${aState}" th:field="*{state}" th:text="${aState}"></option>
+      					</select>
+      				</div>	
+ 				</div>
+				<button class=" w-15 btn btn-primary btn-lg black-background white" type="submit">Submit</button>
+			</form>
+		</div>
+	 </div>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

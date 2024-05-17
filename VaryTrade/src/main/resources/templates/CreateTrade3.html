@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title th:text="'Create ' + ${collectibleNameType} + ' Trade'"></title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+</head>
+
+<style>
+	body {
+		background-color: #D3D3D3;
+	}
+	
+	.nav-item {
+		font-size: 18px;
+	}
+	
+	.header-container {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-end;
+	}
+	
+	.body-container {
+		display: flex;
+		justify-content: center;
+	}
+	
+	.white {
+		color:#ffffff;
+	}
+	
+	.black-background {
+		background-color:#000000;
+	}
+	
+	.select-content {
+		width: fit-content;
+	}
+	
+	.table-content {
+		display: flex;
+	}
+	
+	.left-table {
+		margin-right: 5%;
+	}
+	
+	.right-table {
+		margin-left: 5%;
+	}
+	
+	.form-content {
+		display: inline-table;
+	}
+	
+	.post-error {
+		margin-top: 7%;
+	}
+	
+	label {
+		display: flex;
+	}
+	
+	button {
+		margin-top: 5%;
+	}
+	
+	caption {
+		caption-side: top;
+		display: table-caption;
+  		text-align: center;
+	}
+</style>
+
+<body>
+	<header class="p-3 text-bg-dark">	
+		<div class="container header-container">
+			<h1 th:text="${company.name}"></h1>
+			<ul class="nav nav-pills">
+				<li class="nav-item"><a href="/home" class="nav-link text-white" aria-current="page">Home</a></li>
+       			<li class="nav-item"><a href="/account" class="nav-link text-white">Account</a></li>
+       			<li sec:authorize="hasRole('USER')" class="nav-item"><a href="/your-trade-deals" class="nav-link text-white">Your Trade Deals</a></li>
+       			<li class="nav-item"><a href="/your-resale-deals" class="nav-link text-white">Your Resale Deals</a></li>
+       			<li class="nav-item"><a href="/profile/search" class="nav-link text-white">Search For Collector</a></li>
+       			<li sec:authorize="hasRole('USER')" class="nav-item"><a href="/followers" class="nav-link text-white">Followers</a></li>
+       			<li sec:authorize="hasRole('USER')" class="nav-item"><a href="/following" class="nav-link text-white">Following</a></li>
+       			<li sec:authorize="hasRole('USER')" class="nav-item"><a href="/contact" class="nav-link text-white">Contact Us</a></li>
+       			<li class="nav-item"><a th:href="@{/logout}" class="nav-link text-white">Logout</a></li>
+     		</ul>
+		</div>
+	</header>
+	<div class="container body-container">
+		<div class="py-5 text-center">
+			<div class="table-content">				
+				<table class="table table-dark left-table" th:if="${posterTradeItems} != null">
+				<caption class="h4 text-dark">Items you wish to trade:</caption>
+  				<thead>
+   	 				<tr>
+      					<th scope="col">Name</th>
+      					<th scope="col">Condition</th>
+      					<th scope="col" th:if="${!userTradeItemAttrsOne.isEmpty()}" th:text="${userTradeItemAttr[0]}"></th>
+      					<th scope="col" th:if="${!userTradeItemAttrsTwo.isEmpty()}" th:text="${userTradeItemAttr[1]}"></th>
+   						<th scope="col" th:if="${!userTradeItemAttrsThree.isEmpty()}" th:text="${userTradeItemAttr[2]}"></th>
+    				</tr>
+  				</thead>
+  				<tbody>
+					<tr th:each="tradeItem : ${posterTradeItems}"> 
+						<td scope="col" th:text="${tradeItem.name}"></td>
+						<td scope="col" th:text="${tradeItem.condition}"></td>
+						<td scope="col" th:if="${!userTradeItemAttrsOne.isEmpty()}" th:text="${tradeItem.userTradeItemAttrOne}"></td>
+						<td scope="col" th:if="${!userTradeItemAttrsTwo.isEmpty()}" th:text="${tradeItem.userTradeItemAttrTwo}"></td>
+						<td scope="col" th:if="${!userTradeItemAttrsThree.isEmpty()}" th:text="${tradeItem.userTradeItemAttrThree}"></td>
+						<td scope="col"><form th:action="@{'/trade-deal/create/type-2/trade/remove?id=' + ${tradeItem.id}}" method="post"><button type="submit">Remove</button></form> </td>
+					</tr>
+  				</tbody>
+				</table>			
+				<table class="table table-dark right-table" th:if="${accepterTradeItems} != null">
+				<caption class="h4 text-dark">Items you wish to receive:</caption>
+  				<thead>
+   	 				<tr>
+      					<th scope="col">Name</th>
+      					<th scope="col">Condition</th>
+      					<th scope="col" th:if="${!userTradeItemAttrsOne.isEmpty()}" th:text="${userTradeItemAttr[0]}"></th>
+      					<th scope="col" th:if="${!userTradeItemAttrsTwo.isEmpty()}" th:text="${userTradeItemAttr[1]}"></th>
+   						<th scope="col" th:if="${!userTradeItemAttrsThree.isEmpty()}" th:text="${userTradeItemAttr[2]}"></th>
+    				</tr>
+  				</thead>
+  				<tbody>
+					<tr th:each="tradeItem : ${accepterTradeItems}"> 
+						<td scope="col" th:text="${tradeItem.name}"></td>
+						<td scope="col" th:text="${tradeItem.condition}"></td>
+						<td scope="col" th:if="${!userTradeItemAttrsOne.isEmpty()}" th:text="${tradeItem.userTradeItemAttrOne}"></td>
+						<td scope="col" th:if="${!userTradeItemAttrsTwo.isEmpty()}" th:text="${tradeItem.userTradeItemAttrTwo}"></td>
+						<td scope="col" th:if="${!userTradeItemAttrsThree.isEmpty()}" th:text="${tradeItem.userTradeItemAttrThree}"></td>
+						<td scope="col"><form th:action="@{'/trade-deal/create/type-2/receive/remove?id=' + ${tradeItem.id}}" method="post"><button type="submit">Remove</button></form></td>
+					</tr>
+  				</tbody>
+				</table>
+			</div>
+			<div class="form form-1 form-content">
+				<form id="addTradeItemForm" th:action="@{/trade-deal/create/type-2}" th:object="${webTradeItem}" method="post">
+					<p class="alert alert-danger" th:if="${#fields.hasErrors('type')}" th:errors="*{type}">
+							Type Error
+					</p>
+					<p class="alert alert-danger" th:if="${#fields.hasErrors('recaptchaToken')}" th:errors="*{recaptchaToken}">
+							Recaptcha Error
+					</p>
+					<div class="form-group col-md-2">
+      					<label for="name">Name:</label>
+      					<select name="name" class="form-control select-content" th:field="*{name}">
+      						<option th:each="aTradeItem : ${tradeItems}" th:value="${aTradeItem.name}" th:text="${aTradeItem.name}"></option>
+      					</select>
+      				</div>			
+      				<div class="form-group col-md-2">
+      					<label for="condition">Condition:</label>
+      					<select name="condition" class="form-control select-content" th:field="*{condition}">
+      						<option th:each="condition : ${conditions}" th:value="${condition}"  th:text="${condition}"></option>
+      					</select>
+      				</div>
+      				<label>Do you want to trade this item or receive this item in the trade?</label>
+      				<div class="form-check col-md-2" th:each="type : ${tradeItemTypes}">
+      					<input class="form-check-input" type="radio" th:field="*{type}" th:value="${type}"/>
+      					<label class="form-check-label" th:for="${#ids.prev('type')}" th:text="${type}"></label>
+      				</div>
+      				<div class="form-group col-md-2" th:if="${!userTradeItemAttrsOne.isEmpty()}">
+      					<label for="attr" th:text="${userTradeItemAttr[0]} + ':'"></label>
+      					<select name="attr" class="form-control select-content" th:field="*{userTradeItemAttrOne}">
+   							<option th:each="attr : ${userTradeItemAttrsOne}" th:value="${attr}" th:text="${attr}"></option>
+    					</select>
+      				</div>		
+      				<div class="form-group col-md-2" th:if="${!userTradeItemAttrsTwo.isEmpty()}">
+      					<label for="attrTwo" th:text="${userTradeItemAttr[1]} + ':'"></label>
+      					<select name="attrTwo" class="form-control select-content" th:field="*{userTradeItemAttrTwo}">
+      						<option th:each="attr : ${userTradeItemAttrsTwo}" th:value="${attr}" th:text="${attr}"></option>
+      					</select>
+      				</div>
+      				<div class="form-group col-md-2" th:if="${!userTradeItemAttrsThree.isEmpty()}">
+      					<label for="attrThree" th:text="${userTradeItemAttr[2]} + ':'"></label>
+      					<select name="attrThree" class="form-control select-content" th:field="*{userTradeItemAttrThree}">
+      						<option th:each="attr : ${userTradeItemAttrsThree}" th:value="${attr}"  th:text="${attr}"></option>
+      					</select>
+      				</div>
+      				<div class="form-group col-md-2">
+      					<input type="hidden" id="recaptchaToken" name="recaptchaToken">
+      				</div>
+      				<button class=" w-15 btn btn-primary btn-lg black-background white" type="submit">Add to Trade</button>
+      			</form>
+      			<form th:action="@{/trade-deal/create/type-2/post}" method="post">
+      				<p class="alert alert-danger post-error" th:if="${param.error}" th:text="'Must have items you wish to trade and items you wish to receive.'"></p>
+      				<button class=" w-15 btn btn-primary btn-lg black-background white" type="submit">Post Trade</button>
+      			</form>
+      		</div>
+      	</div>
+      </div>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="https://www.google.com/recaptcha/api.js?render=6Lc4iOonAAAAAG-RJH-UoxAb_k0MaOlxg8OeYZTw"></script>
+	<script>
+		addTradeItemForm.addEventListener('submit', event => {
+			event.preventDefault()
+			getRecaptchaToken(addTradeItemForm)
+		});
+
+		function getRecaptchaToken(form) {
+			grecaptcha.ready(function() {
+				grecaptcha.execute('6Lc4iOonAAAAAG-RJH-UoxAb_k0MaOlxg8OeYZTw', {action: 'register'}).then(function(token) {
+					document.getElementById('recaptchaToken').value = token;
+					form.submit()
+				});
+			});
+		}	
+	</script>
+</body>	
+</html>

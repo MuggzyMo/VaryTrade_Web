@@ -1,0 +1,151 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://thymeleaf.org">
+
+<head>
+	<title th:text="'Create ' + ${collectibleNameType} + ' Resale'"></title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+</head>
+
+<style>
+	body {
+		background-color: #D3D3D3;
+	}
+	
+	.nav-item {
+		font-size: 18px;
+	}
+	
+	.header-container {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-end;
+	}
+	
+	.body-container {
+		display: flex;
+		justify-content: center;
+	}
+	
+	.white {
+		color:#ffffff;
+	}
+	
+	.black-background {
+		background-color:#000000;
+	}
+	
+	.select-content {
+		width: fit-content;
+	}
+
+	.form-content {
+		display: inline-table;
+	}
+	
+	.post-error {
+		margin-top: 7%;
+	}
+	
+	label {
+		display: flex;
+	}
+	
+	button {
+		margin-top: 5%;
+	}
+	
+	caption {
+		caption-side: top;
+		display: table-caption;
+  		text-align: center;
+	}
+</style>
+
+<body>
+	<header class="p-3 text-bg-dark">	
+		<div class="container header-container">
+			<h1 th:text="${company.name}"></h1>
+			<ul class="nav nav-pills">
+				<li class="nav-item"><a href="/home" class="nav-link text-white" aria-current="page">Home</a></li>
+       			<li class="nav-item"><a href="/account" class="nav-link text-white">Account</a></li>
+       			<li sec:authorize="hasRole('USER')" class="nav-item"><a href="/your-trade-deals" class="nav-link text-white">Your Trade Deals</a></li>
+       			<li class="nav-item"><a href="/your-resale-deals" class="nav-link text-white">Your Resale Deals</a></li>
+       			<li class="nav-item"><a href="/profile/search" class="nav-link text-white">Search For Collector</a></li>
+       			<li sec:authorize="hasRole('USER')" class="nav-item"><a href="/followers" class="nav-link text-white">Followers</a></li>
+       			<li sec:authorize="hasRole('USER')" class="nav-item"><a href="/following" class="nav-link text-white">Following</a></li>
+       			<li sec:authorize="hasRole('USER')" class="nav-item"><a href="/contact" class="nav-link text-white">Contact Us</a></li>
+       			<li class="nav-item"><a th:href="@{/logout}" class="nav-link text-white">Logout</a></li>
+     		</ul>
+		</div>
+	</header>
+	<div class="container body-container">
+		<div class="py-5 text-center">		
+			<div class="form-content">
+				<form id="postResaleForm" th:action="@{/resale-deal/create/type-} + ${type}" th:object="${webResaleDeal}" method="post">
+					<p class="alert alert-danger" th:if="${#fields.hasErrors('price')}" th:errors="*{price}">
+							Price Error
+					</p>
+					<p class="alert alert-danger" th:if="${#fields.hasErrors('recaptchaToken')}" th:errors="*{recaptchaToken}">
+							Recaptcha Error
+					</p>
+     	 			<div class="form-group col-md-2">
+     	 				<label for="name">Name:</label>
+    	  				<select name="name" class="form-control select-content" th:field="*{name}">
+    	  					<option th:each="aResaleItem : ${resaleItems}" th:value="${aResaleItem.name}" th:text="${aResaleItem.name}"></option>
+    	  				</select>
+    	  			</div>
+    	  			<div class="form-group col-md-2">
+      					<label for="condition">Condition:</label>
+      					<select name="condition" class="form-control select-content" th:field="*{condition}">
+      						<option th:each="condition : ${conditions}" th:value="${condition}"  th:text="${condition}"></option>
+      					</select>
+      				</div>
+      				<div class="form-group col-md-2" th:if="${!userResaleItemAttrsOne.isEmpty()}">
+      					<label for="attr" th:text="${userResaleItemAttr[0]} + ':'"></label>
+      					<select name="attr" class="form-control select-content" th:field="*{userResaleItemAttrOne}">
+  							<option th:each="attr : ${userResaleItemAttrsOne}" th:value="${attr}" th:text="${attr}"></option>
+    					</select>
+      				</div>		
+      				<div class="form-group col-md-2" th:if="${!userResaleItemAttrsTwo.isEmpty()}">
+      					<label for="attrTwo" th:text="${userResaleItemAttr[1]} + ':'"></label>
+      					<select name="attrTwo" class="form-control select-content" th:field="*{userResaleItemAttrTwo}">
+      						<option th:each="attr : ${userResaleItemAttrsTwo}" th:value="${attr}" th:text="${attr}"></option>
+      					</select>
+      				</div>
+      				<div class="form-group col-md-2" th:if="${!userResaleItemAttrsThree.isEmpty()}">
+      					<label for="attrThree" th:text="${userResaleItemAttr[2]} + ':'"></label>
+      					<select name="attrThree" class="form-control select-content" th:field="*{userResaleItemAttrThree}">
+      						<option th:each="attr : ${userResaleItemAttrsThree}" th:value="${attr}"  th:text="${attr}"></option>
+      					</select>
+      				</div>
+      				<div class="form-group col-md-2" style="width: fit-content">
+						<label class="form-label" for="price">Price:</label>
+						<input class="form-control" type="number" step="0.01" name="price" th:field="*{price}" required/>
+					</div>
+					<div class="form-group col-md-2">
+      					<input type="hidden" id="recaptchaToken" name="recaptchaToken">
+      				</div>
+					<button class=" w-15 btn btn-primary btn-lg black-background white" type="submit">Post Resale</button>
+    	 		</form>
+    		</div>
+    	</div>
+    </div>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="https://www.google.com/recaptcha/api.js?render=6Lc4iOonAAAAAG-RJH-UoxAb_k0MaOlxg8OeYZTw"></script>
+	<script>
+		postResaleForm.addEventListener('submit', event => {
+			event.preventDefault()
+			getRecaptchaToken(postResaleForm)
+		});
+
+		function getRecaptchaToken(form) {
+			grecaptcha.ready(function() {
+				grecaptcha.execute('6Lc4iOonAAAAAG-RJH-UoxAb_k0MaOlxg8OeYZTw', {action: 'register'}).then(function(token) {
+					document.getElementById('recaptchaToken').value = token;
+					form.submit()
+				});
+			});
+		}
+	</script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://thymeleaf.org">
+
+<head>
+	<title th:text="${company.name} + ' Login'"></title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+</head>
+
+<style>
+	a:link {
+ 		color: black;
+	}
+	
+	a:visited {
+ 		color: black;
+	}
+	a:hover {
+  		color: black;
+	}
+	a:active {
+ 	 	color: black;
+	}
+	.login-button {
+		margin-top: 2%;
+	}
+	
+	.sign-in-google-button {
+		display: flex;
+		align-self: center;
+		margin-top: 2%;
+	}
+	
+	.sign-up-button {
+		display: flex;
+		align-self: center;
+	}
+	
+	.black-background {
+		background-color:#000000;
+	}
+	
+	.card-margin {
+		margin-top: 5%;
+		margin-right: 15%;
+		margin-left: 15%;
+	}
+	
+	.grey-background {
+		background-color:#D3D3D3
+	}
+	
+	.white {
+		color:#ffffff;
+	}
+	
+	.link-margin {
+		margin-left:40%;
+		margin-right:40%;
+	}
+	
+	.label-size {
+		font-size: large;
+	}
+	
+	p {
+		font-size: 120%;
+		margin-bottom: auto;
+		margin-top: revert;
+	}
+	
+	body {
+		background-color: black;
+	}
+	
+</style>
+
+<body>  
+	<div class="card py-5 text-center grey-background card-margin">
+		<h1 th:text="${company.name}"></h1>
+		<form id="loginForm" th:action="@{/login}" method="post">
+			<div class="alert alert-danger" th:if="${param.error}">You entered an invalid email and password.</div>
+			<div th:if="${param.logout}">You have been logged out.</div>
+    		<div class="form-floating black">
+      			<input type="email" class="form-control" id="username" name="username">
+      			<label class="label-size" for="username">Email address</label>
+    		</div>
+    		<div class="form-floating">
+      			<input type="password" class="form-control" id="password" name="password">
+     			<label class="label-size" for="password">Password</label>
+    		</div>
+    		<button class="btn btn-lg btn-primary black-background white login-button" type="submit">Login</button>
+  		</form>
+  		<button class="btn btn-lg btn-primary black-background white sign-in-google-button" onclick="location.href='/oauth2/authorization/google'">Sign in with Google</button>
+  		<p class="card-text">Don't have an account yet?</p>
+    	<button class="btn btn-lg btn-primary black-background white sign-up-button" onclick="location.href='/register';">Sign Up</button>
+    	<p class="card-text"><a th:href="@{'/password/forgot'}">Forgot your password? Click here.</a>
+  	</div>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

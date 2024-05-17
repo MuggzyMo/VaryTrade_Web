@@ -1,0 +1,117 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://thymeleaf.org">
+
+<head>
+	<title>Your Open Resale Deal Details</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+</head>
+
+<style>
+	body {
+		background-color: #D3D3D3;
+	}
+	
+	.nav-item {
+		font-size: 18px;
+	}
+	
+	.header-container {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-end;
+	}
+	
+	.body-container {
+		display: flex;
+		justify-content: center;
+	}
+	
+	.white {
+		color:#ffffff;
+	}
+	
+	.black-background {
+		background-color:#000000;
+	}
+	
+	.select-content {
+		width: fit-content;
+	}
+	
+	.table-content {
+		display: flex;
+	}
+	
+	.form-content {
+		display: inline-table;
+	}
+	
+	label {
+		display: flex;
+	}
+	
+	button {
+		margin-top: 5%;
+	}
+	
+	caption {
+		caption-side: top;
+		display: table-caption;
+  		text-align: center;
+	}
+</style>
+
+<body>
+	<header class="p-3 text-bg-dark">	
+		<div class="container header-container">
+			<h1 th:text="${company.name}"></h1>
+			<ul class="nav nav-pills">
+				<li class="nav-item"><a href="/home" class="nav-link text-white" aria-current="page">Home</a></li>
+       			<li class="nav-item"><a href="/account" class="nav-link text-white">Account</a></li>
+       			<li sec:authorize="hasRole('USER')" class="nav-item"><a href="/your-trade-deals" class="nav-link text-white">Your Trade Deals</a></li>
+       			<li class="nav-item"><a href="/your-resale-deals" class="nav-link text-white">Your Resale Deals</a></li>
+       			<li class="nav-item"><a href="/profile/search" class="nav-link text-white">Search For Collector</a></li>
+       			<li sec:authorize="hasRole('USER')" class="nav-item"><a href="/followers" class="nav-link text-white">Followers</a></li>
+       			<li sec:authorize="hasRole('USER')" class="nav-item"><a href="/following" class="nav-link text-white">Following</a></li>
+       			<li sec:authorize="hasRole('USER')" class="nav-item"><a href="/contact" class="nav-link text-white">Contact Us</a></li>
+       			<li class="nav-item"><a th:href="@{/logout}" class="nav-link text-white">Logout</a></li>
+     		</ul>
+		</div>
+	</header>
+	<div class="container body-container">
+		<div class="py-5 text-center">	
+			<h4 th:text="'Id: ' + ${openResaleDeal.id}"></h4>
+			<h4 th:text="'Date Posted: ' + ${openResaleDeal.postDate}"></h4>		
+			<div class="table-content">
+				<table class="table table-dark">
+					<thead>
+						<tr>
+							<th scope="col">Date Posted</th>
+      						<th scope="col">Item you are selling</th>
+      						<th scope="col">Price</th>
+      						<th scope="col">Condition</th>
+							<th scope="col" th:if="${!userResaleItemAttrsOne.isEmpty()}" th:text="${userResaleItemAttr[0]}"></th>
+      						<th scope="col" th:if="${!userResaleItemAttrsTwo.isEmpty()}" th:text="${userResaleItemAttr[1]}"></th>
+   							<th scope="col" th:if="${!userResaleItemAttrsThree.isEmpty()}" th:text="${userResaleItemAttr[2]}"></th>
+      					</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td scope="col" th:text="${openResaleDeal.postDate}"></td>
+							<td scope="col" th:text="${openResaleDeal.name}"></td>
+							<td scope="col" th:text="${openResaleDeal.price}"></td>
+							<td scope="col" th:text="${openResaleDeal.condition}"></td>
+							<td scope="col" th:if="${!userResaleItemAttrsOne.isEmpty()}" th:text="${openResaleDeal.userResaleItemAttrOne}"></td>
+							<td scope="col" th:if="${!userResaleItemAttrsTwo.isEmpty()}" th:text="${openResaleDeal.userResaleItemAttrTwo}"></td>
+							<td scope="col" th:if="${!userResaleItemAttrsThree.isEmpty()}" th:text="${openResaleDeal.userResaleItemAttrThree}"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<form th:action="@{/your-resale-deals/open/details/delete(id=${openResaleDeal.id})}" method="post">
+      			<button class=" w-15 btn btn-primary btn-lg black-background white" type="submit">Delete Resale</button>
+      		</form>
+      	</div>
+	</div>
+</body>
+</html>
